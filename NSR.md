@@ -1,0 +1,618 @@
+---
+title: Network and Certificate System Security Requirements
+subtitle: Version 2.0.5
+author:
+  - CA/Browser Forum
+date: 09 July 2025
+copyright: |
+  Copyright 2025 CA/Browser Forum
+
+  This work is licensed under the Creative Commons Attribution 4.0 International license.
+---
+
+## Introduction
+
+### Overview
+
+**Scope and Applicability**:
+
+In these Requirements, the CA is responsible for all tasks performed by Delegated Third Parties and Trusted Roles, and the CA SHALL define, document, and disclose to its auditors:
+
+a. the tasks assigned to Delegated Third Parties or Trusted Roles;
+b. the arrangements made with Delegated Third Parties to ensure compliance with these Requirements; and
+c. the relevant practices, procedures, and/or systems implemented by Delegated Third Parties.
+
+**Guiding Principle and Goal**:
+
+CAs are expected to maintain a very high level of security for their infrastructure and systems because the certificates they issue play a vital role in the security of the internet, email, and software distribution.
+
+**Desired Outcomes**:
+
+The following are outcomes that this document seeks to achieve:
+
+* CAs are able to clearly understand the minimum security requirements found in this document and successfully adapt/implement these Requirements to their own infrastructure and architecture.
+* Audit and assessment bodies are able to accurately map these Requirements to the specific implementations observed during audit engagements, and judge compliance against these Requirements.
+* CA organizations, operations, infrastructure, and CA Private Keys and certificates are not compromised.
+* Controls are implemented that protect against external and internal threats, including mistakes.
+* Through a combination of credentialing, role management, and training, CA personnel are limited in their ability to negatively impact the CA’s operations, whether intentionally or unintentionally.
+* Systems provide sufficient artifacts to enable traceability of all events and identification and investigation of anomalous events.
+* Continuous monitoring and testing are conducted to identify any vulnerabilities or weaknesses that need to be addressed promptly and to ensure the effectiveness of implemented security controls.
+* CA Infrastructure is maintained, including timely patching of software and firmware, and hardware is kept sufficiently up to date to support software and systems running on it.
+* A framework is provided for assessment of infrastructure and systems not directly owned or controlled by the CA.
+* The use of infrastructure or systems not owned or controlled by the CA is possible, if such use aligns with these Requirements and all other applicable standards, policies, or requirements.
+
+### Document History
+
+| **Ver.** | **Ballot** | **Description** | **Adopted** | **Effective\*** |
+|-|-|-----|--|--|
+| 1.0 | 83 | Original Version Adopted | 03‐Aug‐2012 | 01‐Jan‐2013 |
+| 1.1 | 210 | Misc. Changes to NCSSRs | 31‐Aug‐2017 | 09-Mar-2018 |
+| 1.2 | SC3 | Two-Factor Authentication and Password Improvements | 16‐Aug‐2018 | 15-Sep-2018 |
+| 1.3 | SC21 | The Network and Certificate Systems Security Requirements Section 3 (Log Integrity Controls) | 26‐Sep‐2019 | 04-Nov-2019 |
+| 1.4 | SC29 | System Configuration Management | 07-May-2020 | 08-Jun-2020 |
+| 1.5 | SC28 | Logging and Log Retention | 10-Sep-2020 | 19-Sep-2020 |
+| 1.6 | SC39 | Definition of Critical Vulnerability | 16-Feb-2021 | 30-Mar-2021 |
+| 1.7 | SC41 | Reformatting the BRs, EVGs, and NCSSRs | 24-Feb-2021 | 5-Apr-2021 |
+| 2.0 | NS-003 | Restructure NCSSRs | 06-May-2024 | 05-Jun-2024 |
+| 2.0.1 | NS-005 | Clarifications to sections 1, 2 and a definition prior to NS-003 taking effect | 12-Oct-2024 | 11-Nov-2024 |
+| 2.0.2 | NS-004 | Updating Section 4 - Vulnerability Management - of the NCSSRs | 13-Nov-2024 | 13-Dec-2024 |
+| 2.0.3 | NS-006 | Fix 1.2.2 encrypted connections scoping | 13-Nov-2024 | 13-Dec-2024 |
+| 2.0.4 | NS-007 | Extend deadline to implement NSRv2 | 02-Feb-2025 | 07-Mar-2025 |
+| 2.0.5 | NS-008 | Updates to CA Infrastructure Scope, Trusted Roles, Systems' Applicability, and various other improvements | 03-Jun-2025 | 03-Jul-2025 |
+
+\* Effective Date based on completion of 30‐day IPR review without filing of any Exclusion Notices.
+
+### Definitions
+
+**Air-Gapped**:  Physically and logically separated, disconnected, and isolated from all other Systems.
+
+**CA-Colocated Environment**: A Physically Secure Environment in which:
+
+   1. the CA operates its own Systems within a facility managed by a third-party service provider;
+   2. the CA maintains direct physical control over its designated space (e.g., dedicated rack, cage, or suite) and the Systems within that space; and
+   3. the third-party service provider manages facility-level controls such as building perimeter security, physical access systems, power, environmental controls (e.g., HVAC), and fire suppression.
+
+**CA-Controlled Environment:**: A Physically Secure Environment where all physical and operational controls are exclusively managed by the Certificate Authority (the organization), including facility-level controls such as building perimeter security, physical access systems, power, environmental controls (e.g., HVAC), and fire suppression. No portion of the Physically Secure Environment's physical or environmental controls is operated by a third-party service provider.
+
+**CA Infrastructure**: Collectively the infrastructure used by the CA or Delegated Third Party which qualifies as a:
+
+* Certificate System;
+* Root CA System (Air-Gapped and otherwise);
+* Security Support System; or
+* Logging System.
+
+**Certificate System**: A system used by a CA or Delegated Third Party to store, access, process, or manage data or provide services related to performing:
+
+   1. identity validation;
+   2. identity authentication;
+   3. account registration;
+   4. certificate application;
+   5. certificate approval;
+   6. certificate issuance;
+   7. certificate revocation;
+   8. generation and signing of authoritative certificate status; or
+   9. key escrow.
+
+**Critical Security Event**: An event, set of circumstances, or anomalous activity that could lead to:
+
+   1. a circumvention of CA Infrastructure security controls; or
+   2. a compromise of CA Infrastructure integrity or operational continuity
+
+These include, but are not limited to:
+
+   1. excessive login attempts;
+   2. attempts to access prohibited resources;
+   3. denial of service and distributed denial of service attacks;
+   4. attacker reconnaissance;
+   5. excessive traffic at unusual hours;
+   6. signs of unauthorized access;
+   7. system intrusion; or
+   8. physical compromise of component integrity.
+
+**Delegated Third Party**: A natural person or legal entity that is not the CA and that operates any part of a Certificate System.
+
+**Key Pair**: The Private Key and its associated Public Key.
+
+**Logging System**: The System(s) used for the reduction, analysis, and long-term, authoritative retention of audit logs. This definition includes any backup or recovery system whose data is intended to be used to restore or replace the authoritative copy. Copies of logs used for transient purposes (such as debugging or temporary analysis) are not considered Logging Systems, provided they cannot be used to restore the authoritative copy.
+
+**Multi-Factor Authentication**: An authentication mechanism consisting of two or more of the following independent categories of credentials (i.e. factors) to verify the user’s identity for a login or other transaction:
+
+   1. something the user knows (knowledge factor);
+   2. something the user has (possession factor); and
+   3. something the user is (inherence factor).
+
+Each factor is independent of the other(s).
+
+**Multi-Party Control**: An access control mechanism which requires two or more separate, authorized users to successfully authenticate with their own unique credentials prior to access being granted.
+
+**Network Boundary Control**: Components that manage and control network traffic flow to, from, and within CA Infrastructure.
+
+**Physically Secure Environment**:  A controlled and protected physical space consisting minimally of a physical environment which is:
+
+1. protected by security controls which address the topics outlined in [section 4.5.1 of RFC 3647](https://datatracker.ietf.org/doc/html/rfc3647#section-4.5.1); and
+2. operated in accordance with Risk Assessments conducted by the CA.
+
+**Principle of Least Privilege**: The principle that users, devices, and software should only have the minimum necessary access and privileges to complete their functions.
+
+**Principle of Separation of Duties**: The principle that tasks are divided among multiple individuals such that no single person has complete control over sensitive operations.
+
+**Private Key**: The cryptographic key of an asymmetric Key Pair that is kept secret by the holder of the Key Pair. It may be used to create digital signatures and/or to decrypt data that were encrypted by the corresponding Public Key.
+
+**Privileged Access**: Access to CA Infrastructure or Network Boundary Controls that provides capabilities or permissions enabling administration, configuration, management, or operation of such systems.
+
+**Public Key**: The cryptographic key of an asymmetric Key Pair that can be made public without compromising the security of the Key Pair. It may be used to verify digital signatures and/or to encrypt data that can be decrypted by the corresponding Private Key.
+
+**Requirements**: The Network and Certificate System Security Requirements found in this document.
+
+**Risk Assessment**: A formal process that:
+
+   1. Identifies and documents foreseeable internal and external threats to the CA Infrastructure that could result in:
+      * unauthorized access to the CA Infrastructure;
+      * disclosure of data stored in the CA Infrastructure;
+      * misuse of the CA Infrastructure; or
+      * unapproved alteration or destruction of any part of the CA Infrastructure;
+   2. Assesses and documents the likelihood and potential damage of each identified threat, taking into consideration minimally the sensitivity and criticality of the CA Infrastructure; and
+   3. Assesses and documents the sufficiency of the policies, procedures, controls, information systems, technology, and other arrangements that the CA has in place to counter each identified threat.
+
+**Root CA Certificate**:  A self-signed and self-issued certificate where:
+
+   1. the issuer and subject of the certificate are the same; and
+   2. the digital signature of the certificate is:
+      * generated using the Private Key of a Key Pair whose corresponding Public Key is bound to the certificate; and
+      * verified using the Public Key contained in the certificate.
+
+**Root CA Private Key**: The Private Key associated with a Root CA Certificate.
+
+**Root CA System**: A system used to:
+
+   1. generate a Key Pair whose Private Key is or will be a Root CA Private Key;
+   2. store a Root CA Private Key; or
+   3. create digital signatures using a Root CA Private Key.
+
+**Security Support System**: The System(s) supporting the security of CA Infrastructure, performing functions such as:
+
+   1. authentication;
+   2. generation and collection of audit logs;
+   3. vulnerability scanning;
+   4. physical intrusion detection;
+   5. host-based intrusion detection; and
+   6. network-based intrusion detection.
+
+   The following activities are governed by the Logging System definition:
+
+   1. audit log reduction;
+   2. audit log analysis; and
+   3. long-term, authoritative retention of audit logs.
+
+**Shared Responsibility Model:** A security framework in which a third-party service provider secures the underlying infrastructure, platforms, and services of the Third Party-Controlled Environment, while the customer is responsible for securing their data, configurations, and access controls within the Third Party-Controlled Environment.
+
+**System**: One or more pieces of equipment or software that stores, transforms, or communicates data.
+
+**Third Party-Controlled Environment:** A Physically Secure Environment where all physical and operational controls are managed by a third-party service provider. The CA does not maintain direct physical access to, or physical control over, the underlying hardware or the facility in which it operates.
+
+**Trusted Role**: An individual employee or contractor of a CA or Delegated Third Party who has authorized access to any Certificate System or Root CA System.
+
+**Workstation**: A device, such as a phone, tablet, or desktop or laptop computer, which is:
+
+   1. connected to the same network as CA Infrastructure and/or a Network Boundary Control; and
+   2. capable of Privileged Access.
+
+## Requirements
+
+Prior to 12-Nov-2025, the CA SHALL adhere to these Requirements or Version 1.7 of the Network and Certificate System Security Requirements. Effective 12-Nov-2025, the CA SHALL adhere to these Requirements.
+
+### 1. CA Infrastructure and Network Boundary Control Configuration
+
+The CA MUST define an inventory of its CA Infrastructure.
+
+#### 1.1 Network Segmentation
+
+##### 1.1.1
+
+CA Infrastructure MUST be segmented into separate networks based on the functional and/or logical relationships of CA Infrastructure components.
+
+###### 1.1.1.1
+
+Network segmentation SHOULD be designed and implemented in a manner that:
+
+1. minimizes attack surfaces;
+2. limits lateral movement within networks;
+3. restricts traffic flow between different network segments; and
+4. protects all CA Infrastructure components from unauthorized access.
+
+###### 1.1.1.2
+
+Network segmentation MUST be designed and implemented using Network Boundary Controls, such as:
+
+* firewalls
+* network switches
+* physically separate networks
+* software-defined networking
+
+Network segmentation MAY leverage software, such as:
+
+* virtual local area networks (VLANs) and VLAN access control lists
+* virtual private networks (VPNs)
+
+#### 1.2 CA Infrastructure Security
+
+##### 1.2.1
+
+Certificate Systems, Root CA Systems (Air-gapped or otherwise), and Security Support Systems MUST be in:
+
+   1. a CA-Controlled Environment; or
+   2. a CA-Colocated Environment that fulfills the requirements of [Section 5](#5-requirements-for-ca-colocated-environments).
+
+Logging Systems MUST be in:
+
+   1. a CA-Controlled Environment;
+   2. a CA-Colocated Environment that fulfills the requirements of [Section 5](#5-requirements-for-ca-colocated-environments); or
+   3. a Third Party-Controlled Environment that fulfills the requirements of [Section 6](#6-requirements-for-third-party-controlled-environments).
+
+Root CA Systems MUST be on physically separate networks from all other CA Infrastructure.
+
+##### 1.2.2
+
+Connections to the CA Infrastructure MUST be authenticated and encrypted, except where a formal specification(s) prohibits or limits the use of authentication and/or encryption.
+
+Connections within the CA Infrastructure or Network Boundary Controls SHOULD be authenticated and encrypted.
+
+CA Infrastructure and Network Boundary Controls MUST be implemented and configured in a manner that minimizes unnecessary active components and capabilities such that:
+
+   1. all connections, communications, applications, services, protocols, and ports not used are removed and/or disabled; and
+   2. only connections, communications, applications, services, protocols, and ports necessary and approved under the Principle of Least Privilege are enabled.
+
+##### 1.2.3
+
+Equivalent security MUST be implemented on all Systems on the same network as any CA Infrastructure component.
+
+#### 1.3 Change Management
+
+The CA MUST establish and maintain a change management process which is minimally:
+
+   1. documented comprehensively;
+   1. authoritative for:
+      1. all personnel in Trusted Roles;
+      2. management of Network Boundary Controls; and
+      3. management of CA Infrastructure;
+   1. reviewed annually;
+   1. updated as needed; and
+   1. approved:
+      * with each update;
+      * prior to going into effect; and
+      * by personnel in applicable Trusted Roles.
+
+The CA MUST ensure the change management process:
+
+   1. enables identification, documentation, and remediation of risks associated with introducing, modifying, or removing:
+      * Trusted Role definitions;
+      * Trusted Role appointments;
+      * Network Boundary Controls; or
+      * CA Infrastructure;
+   2. addresses managing exceptions and responding to emergencies; and
+   3. incorporates procedures for change reversal where applicable.
+
+The CA MUST ensure that all changes are completed in accordance with such a change management process for:
+
+   1. Trusted Role definitions;
+   2. Trusted Role appointments;
+   3. Network Boundary Controls; and
+   4. CA Infrastructure.
+
+### 2. Access Control
+
+Within this Section 2, references to "access" include all physical and logical access, unless otherwise specified.
+
+#### 2.1 Trusted roles
+
+The CA MUST define Trusted Roles for the personnel who design, build, develop, implement, operate, and maintain its Certificate Systems and Root CA Systems.
+
+Each Trusted Role MUST have its responsibilities, privileges, and access documented.
+
+Each Trusted Role MUST be assigned responsibilities, privileges, and access in a manner consistent with:
+
+1. the Principle of Least Privilege; and
+2. the Principle of Separation of Duties.
+
+##### 2.1.1
+
+The CA MUST ensure personnel assigned to a Trusted Role act only within the scope of their Trusted Role(s) when performing responsibilities, using privileges, or using access assigned to that Trusted Role.
+
+#### 2.2 Access Management
+
+##### 2.2.1
+
+The CA MUST ensure access to Certificate Systems and Root CA Systems is:
+
+1. limited to personnel assigned to applicable Trusted Roles; and
+2. based on the Principle of Least Privilege.
+
+###### 2.2.1.1
+
+The CA MUST ensure personnel assigned to Trusted Roles that are authorized to access or authenticate to Certificate Systems or Root CA Systems use unique authentication credentials created by or assigned to the authorized individual.
+
+###### 2.2.1.2
+
+The CA SHOULD NOT allow group accounts or shared role credentials to authenticate to or access CA Infrastructure and Network Boundary Controls.
+
+If group accounts or shared role credentials are used, the CA MUST be able to attribute each use to:
+
+1. an approved activity; and
+2. an individual user or service account.
+
+###### 2.2.1.3
+
+The CA MUST ensure authentication credentials are changed or revoked when associated authorizations are changed or revoked.
+
+The CA MUST ensure access to CA Infrastructure and Network Boundary Controls is disabled for personnel within twenty-four (24) hours of the termination of an individual's employment or contracting relationship.
+
+###### 2.2.1.4
+
+The CA MUST ensure any account capable of authenticating to or accessing CA Infrastructure or Network Boundary Controls is reviewed at a minimum frequency of every three (3) months.
+
+The CA MUST ensure any account that is not necessary for the operation of CA Infrastructure or Network Boundary Controls is deactivated or removed such that the account is no longer capable of authenticating to or accessing CA Infrastructure or Network Boundary Controls.
+
+###### 2.2.1.5
+
+The CA MUST ensure security measures are implemented that minimize the susceptibility of CA Infrastructure and Network Boundary Controls to unauthorized access through repeated attempts to authenticate to or access an account that has access to CA Infrastructure or Network Boundary Controls.
+
+These measures SHOULD prevent brute-force attacks which systematically enumerate authentication credentials such as username and password combinations.
+
+These measures SHOULD be based on a Risk Assessment.
+
+##### 2.2.2
+
+The CA MUST ensure Workstations are configured in a manner that prevents continued access to the Workstation after a set period of inactivity, for example by automatically logging off active users. The allowed and configured duration of inactivity MUST be selected based on the CA's assessment of associated risks.
+
+##### 2.2.3
+
+The CA MUST enforce the use of Multi-Factor Authentication for access to CA Infrastructure.
+
+Authentication based on the possession of a cryptographic key can be used as part of Multi-factor Authentication only if that key is stored in a key storage device that is designed to prevent extraction.
+
+##### 2.2.4
+
+The CA MUST enforce the use of Multi-Party Control for physical access to any Root CA System.
+
+##### 2.2.5
+
+The CA SHOULD ensure passwords used as authentication credentials for accounts on CA Infrastructure, Network Boundary Controls, or Workstations are generated and managed in accordance with NIST 800-63B Revision 3 Appendix A. Access to shared credentials MUST:
+
+* be limited to personnel based on the Principle of Least Privilege; and
+* comply with section 2.2.1.2.
+
+##### 2.2.6
+
+The CA MUST ensure any remote connection that enables Privileged Access to CA Infrastructure:
+
+   1. originates from a Workstation owned and/or controlled by the CA;
+   2. is made through a temporary, non‐persistent, and encrypted channel;
+   3. is authenticated using Multi‐Factor Authentication; and
+   4. is made to a Network Boundary Control asset which:
+      * is located within the CA’s network;
+      * is secured in accordance with these Requirements; and
+      * mediates the remote connection to the CA Infrastructure.
+
+### 3. Monitoring, Logging, Auditing, and Incident Response
+
+#### 3.1 Monitoring and Logging
+
+##### 3.1.1
+
+The CA MUST identify and document the monitoring and logging capabilities of CA Infrastructure and Network Boundary Controls.
+
+The CA SHOULD establish, evaluate, and maintain policies and procedures for:
+
+   1. identifying and utilizing the monitoring and logging capabilities of CA Infrastructure and Network Boundary Controls; and
+   2. retaining, parsing, securing, and archiving the audit logs output by CA Infrastructure and Network Boundary Controls.
+
+The CA SHOULD review and update such policies and procedures at least annually.
+
+###### 3.1.1.1
+
+The CA MUST ensure the monitoring and logging capabilities of CA Infrastructure and Network Boundary Controls are enabled to the extent necessary to meet:
+
+   1. these Requirements; and
+   2. applicable obligations that depend on such audit logs (such as the requirements in [Section 5.4.1 (3)](https://github.com/cabforum/servercert/blob/main/docs/BR.md#541-types-of-events-recorded) of the Baseline Requirements for the Issuance and Management of Publicly-Trusted TLS Server Certificates).
+
+###### 3.1.1.2
+
+The CA MUST ensure audit logs produced by the monitoring and logging capabilities of CA Infrastructure and Network Boundary Controls include activities and/or events:
+
+   1. necessary to detect possible:
+      1. Critical Security Events; and
+      2. modifications to CA Infrastructure not authorized through the change management process outlined in [Section 1.3](#13-change-management); and
+   2. with sufficient detail to meet
+      1. these Requirements; and
+      2. applicable obligations that depend on such audit logs (such as the requirements in [Section 5.4.1 (3)](https://github.com/cabforum/servercert/blob/main/docs/BR.md#541-types-of-events-recorded) of the Baseline Requirements for the Issuance and Management of Publicly-Trusted TLS Server Certificates).
+
+##### 3.1.2
+
+The CA MUST ensure the integrity of logging processes within CA Infrastructure is monitored through:
+
+   1. continuous automated monitoring operating within CA Infrastructure; or
+   2. a review by personnel assigned to applicable Trusted Roles at least once every 31 days.
+
+The CA MUST ensure such integrity monitoring is configured and managed in a manner sufficiently effective to identify possible audit log compromise.
+
+###### 3.1.2.1
+
+The CA MUST ensure audit logs are retained and/or archived for the amount of time necessary to meet:
+
+   1. these Requirements; and
+   2. applicable obligations which depend on such audit logs (such as the requirements in [Section 5.4.1 (3)](https://github.com/cabforum/servercert/blob/main/docs/BR.md#541-types-of-events-recorded) of the Baseline Requirements for the Issuance and Management of Publicly-Trusted TLS Server Certificates).
+
+The CA SHOULD ensure retained and/or archived audit logs are kept and managed in a manner sufficiently effective to prevent unapproved alteration or access.
+
+#### 3.2 Audit Log Processing and Alerting
+
+##### 3.2.1
+
+The CA MUST ensure audit logs are processed:
+
+   1. through automated mechanisms under the control of personnel assigned to applicable Trusted Roles; and
+   2. in a manner sufficiently effective to minimally identify possible:
+      1. Critical Security Events; and
+      2. unauthorized changes to CA Infrastructure.
+
+##### 3.2.2
+
+The CA MUST ensure personnel assigned to applicable Trusted Roles are alerted via multiple mechanisms and/or communication channels of identified possible:
+
+   1. audit log compromise;
+   2. Critical Security Events; and
+   3. unauthorized changes to CA Infrastructure.
+
+##### 3.2.3
+
+The CA MUST ensure personnel assigned to applicable Trusted Roles commence an initial response to alerts of [Section 3.2.2](#322) within twenty-four (24) hours of the alert being generated.
+
+###### 3.2.3.1
+
+The CA MUST ensure the initial response confirms whether the alert identifies a legitimate
+
+   1. audit log compromise;
+   2. Critical Security Event; and/or
+   3. unauthorized change to the CA Infrastructure.
+
+The CA MUST ensure personnel assigned to applicable Trusted Roles create and follow an incident response plan for all legitimate alerts.
+
+###### 3.2.3.2
+
+The CA SHOULD ensure incident response plans minimally include:
+
+   1. identification of the potential impact, scope, and severity of the incident;
+   2. containment of the incident to minimize further impact; and
+   3. identification and mitigation or eradication of the incident root cause(s).
+
+### 4. Vulnerability Management
+
+The CA MUST implement the policies and procedures in [Section 4](#4-vulnerability-management) for identifying, evaluating, and resolving security vulnerabilities.
+
+These policies and procedures MUST apply to all Certificate Systems.
+
+These policies and procedures SHOULD apply to Security Support Systems and Network Boundary Controls.
+
+Effective 15-Apr-2026, these policies and procedures MUST apply to Security Support Systems and Network Boundary Controls.
+
+#### 4.1 Intrusion Detection and Prevention
+
+The CA MUST protect the systems in the inventory of CA Infrastructure against common network and system threats using intrusion detection and prevention controls.
+
+#### 4.2 Vulnerability Management Lifecycle
+
+The CA MUST document and follow a vulnerability correction process that includes:
+
+   1. identification;
+   1. review;
+   1. response; and
+   1. remediation.
+
+##### 4.2.1 Vulnerability Identification
+
+The CA's vulnerability identification process MUST include monitoring for relevant security advisories and penetration testing.
+
+###### 4.2.1.1 Penetration Testing
+
+As part of the identification component of the CA's vulnerability correction process, the CA MUST define and follow a program for performing penetration tests that ensures:
+
+   1. penetration tests are performed:
+      * at least on an annual basis; and
+      * after infrastructure or application changes that are organizationally defined as significant; and
+   2. penetration tests are performed by a person or entity (or collective group thereof) with the requisite skills, tools, proficiency, code of ethics, and independence; and
+   3. vulnerabilities identified during the penetration test are remediated using the vulnerability correction process in [Section 4.2](#42-vulnerability-management-lifecycle).
+
+##### 4.2.2 Vulnerability Remediation
+
+A vulnerability is remediated when the CA has:
+
+* fixed the vulnerability such that the vulnerability is no longer present; or
+* confirmed the impact of the vulnerability and documented why the vulnerability does not impact the CA's security posture.
+
+#### 4.3 Vulnerability Management Timeframe
+
+The CA MUST establish one or more timeframes for reviewing, responding to, and remediating all identified vulnerabilities.
+
+Each timeframe MUST be established based on a Risk Assessment performed by the CA.
+
+The Risk Assessment MUST be based on a documented security analysis. The security analysis SHOULD take into account and address the following principles:
+
+* criticality of assets;
+* maintaining confidentiality, integrity, and availability of assets;
+* regulatory requirements;
+* likelihood and impact of exploitation;
+* dependencies and interdependencies;
+* remediation resource requirements;
+* historical data; and
+* present threat landscape.
+
+The CA MUST ensure vulnerabilities are reviewed, responded to, and remediated in accordance with their established timeframe(s).
+
+The CA MUST document in Section 6.7 of their Certificate Policy and/or Certification Practices Statement each timeframe established for responding to and remediating vulnerabilities.
+
+# 5. Requirements for CA-Colocated Environments
+
+The requirements of this section MUST be fulfilled for all Systems which are operated in a CA-Colocated Environment.
+
+## 5.1 Service Agreement
+
+The CA MUST maintain a documented service agreement with the operator of the CA-Colocated Environment that addresses:
+
+1. the facility-level physical security controls provided by the third-party service provider, including, at minimum, controls addressing the topics outlined in Section 4.5.1 of RFC 3647;
+2. the delineation of responsibilities between the CA and the third-party service provider for each aspect of physical and environmental security;
+3. the CA's right to audit or obtain independent audit reports covering the third-party service provider's facility-level controls;
+4. incident notification requirements, including timelines for the third-party service provider to notify the CA of physical security incidents that may affect the CA's designated space; and
+5. the conditions and procedures under which the third-party service provider may access the CA's designated space.
+
+## 5.2 Risk Assessment
+
+The CA MUST perform a risk assessment of the third-party service provider operating the CA-Colocated Environment. The risk assessment MUST:
+
+1. evaluate the adequacy of the third-party service provider's facility-level physical and environmental security controls;
+2. be performed prior to initial use and reviewed at least annually thereafter; and
+3. document the evidence relied upon in performing the risk assessment, which MAY include independently audited or certified reports (e.g., SOC 2 Type II, ISO/IEC 27001).
+
+## 5.3 Physical Access Controls
+
+The CA MUST ensure that:
+
+1. the CA's designated space within the CA-Colocated Environment is physically separated from spaces controlled by other tenants through mechanisms such as locked cages, locked cabinets, or dedicated suites;
+2. physical access to the CA's designated space is restricted to personnel assigned to applicable Trusted Roles;
+3. the CA maintains independent control over the access credentials (e.g., keys, locks, access cards, biometric enrollment) for its designated space; and
+4. the third-party service provider's access to the CA's designated space, if any, is:
+   a. governed by documented procedures that are consistent with the CA's physical access policies;
+   b. escorted by, or conducted with the prior authorization and knowledge of, personnel assigned to applicable Trusted Roles; and
+   c. logged and reviewed by the CA.
+
+Where Root CA Systems are housed in a CA-Colocated Environment, the CA MUST additionally ensure that the third-party service provider cannot independently access the CA's designated space without the presence of personnel assigned to applicable Trusted Roles.
+
+## 5.4 Monitoring and Verification
+
+The CA MUST:
+
+1. verify, at least annually, that the third-party service provider's facility-level controls continue to satisfy the CA's risk assessment; and
+2. review physical access logs for the CA's designated space at least quarterly.
+
+# 6. Requirements for Third Party-Controlled Environments
+
+The requirements of this section MUST be fulfilled for all Systems which are operated in a Third Party-Controlled Environment.
+
+## 6.1 Risk Assessment
+
+The CA MUST perform a risk assessment of the service provider of the Third Party-Controlled Environment. The risk assessment MUST cover topics applicable to the services being used and MUST cover the CA’s considerations and criteria. The CA MUST document the evidence relied upon in performing the risk assessment, which MAY include independently audited or certified reports. The risk assessment SHOULD cover: 
+
+1. Vulnerability Detection
+2. Patch Management
+3. System Hardening
+4. Network Hardening
+5. Physical Security
+
+## 6.2 Shared Responsibility
+
+The CA MUST configure Systems in accordance with the documentation, guidance, and Shared Responsibility Model published by the operator of the Third Party-Controlled Environment. The CA MUST document how its configuration satisfies the responsibilities allocated to the CA and aligns with the CA’s risk assessment.
+
+## 6.3 Data Integrity and Retention
+
+Systems which are operated in a Third Party-Controlled Environment MUST be configured to prevent the modification or deletion of logs for their entire required retention period. This MUST be implemented using provider-native immutability features, such as WORM (Write-Once-Read-Many) or Object Locks.
+
+The CA MUST verify, at least annually, that the immutability and retention configuration remains effective and that audit logs can be retrieved for the required retention period.
