@@ -331,7 +331,7 @@ The CA MUST ensure access to Certificate Systems and Root CA Systems is:
 1. limited to personnel assigned to applicable Trusted Roles; and
 2. based on the Principle of Least Privilege.
 
-The CA MUST ensure access to RA Systems and Root CA Systems is based on the Principle of Least Privilege.
+The CA MUST ensure access to RA Systems is based on the Principle of Least Privilege.
 
 ###### 2.2.1.1
 
