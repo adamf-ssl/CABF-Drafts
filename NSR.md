@@ -69,20 +69,16 @@ The following are outcomes that this document seeks to achieve:
 **CA Infrastructure**: Collectively the infrastructure used by the CA or Delegated Third Party which qualifies as a:
 
 * Certificate System;
+* Registration Authority System
 * Root CA System (Air-Gapped and otherwise); or
 * Security Support System.
 
 **Certificate System**: A system used by a CA or Delegated Third Party to store, access, process, or manage data or provide services related to performing:
 
-   1. identity validation;
-   2. identity authentication;
-   3. account registration;
-   4. certificate application;
-   5. certificate approval;
-   6. certificate issuance;
-   7. certificate revocation;
-   8. generation and signing of authoritative certificate status; or
-   9. key escrow.
+   1. certificate issuance;
+   2. certificate revocation;
+   3. generation and signing of authoritative certificate status; or
+   4. key escrow.
 
 **Critical Security Event**: An event, set of circumstances, or anomalous activity that could lead to:
 
@@ -100,7 +96,7 @@ These include, but are not limited to:
    7. system intrusion; or
    8. physical compromise of component integrity.
 
-**Delegated Third Party**: A natural person or legal entity that is not the CA and that operates any part of a Certificate System.
+**Delegated Third Party**: A natural person or legal entity that is not the CA and that operates any part of a Certificate System or Registration Authority System.
 
 **Key Pair**: The Private Key and its associated Public Key.
 
@@ -130,6 +126,22 @@ Each factor is independent of the other(s).
 **Privileged Access**: Access to CA Infrastructure or Network Boundary Controls that provides capabilities or permissions enabling administration, configuration, management, or operation of such systems.
 
 **Public Key**: The cryptographic key of an asymmetric Key Pair that can be made public without compromising the security of the Key Pair. It may be used to verify digital signatures and/or to encrypt data that can be decrypted by the corresponding Private Key.
+
+**Registration Authority System**: A System used by a CA or Delegated Third Party to store, access, process, or manage data, or to provide services, related to performing any one or more of the following functions:
+
+1. verifying an Applicant's control over, or authorization for, a domain name to be included in a Certificate;
+2. verifying an Applicant's control over an IP address to be included in a Certificate;
+3. verifying an Applicant's control over a mailbox or email address to be included in a Certificate;
+4. verifying the legal existence, identity, or attributes (such as name, address, or registration identifier) of an organization to be included in a Certificate;
+5. verifying the identity of a natural person to be included in, or associated with, a Certificate;
+6. verifying that a natural person submitting or authorizing a certificate request is authorized to act on behalf of the Applicant;
+7. authenticating an Applicant, Subscriber, or their delegated personnel to a certificate request, retrieval, or management service;
+8. creating, provisioning, modifying, or deactivating an Applicant or Subscriber account used to request or manage Certificates;
+9. issuing, distributing, resetting, or managing the credentials or authentication factors associated with such an account;
+10. receiving or intaking a certificate request, including any Certificate Signing Request and its associated request data;
+11. parsing, validating the format of, or otherwise processing certificate request data prior to a decision on issuance;
+12. evaluating a certificate request against applicable issuance criteria; or
+13. deciding whether to authorize or reject the issuance of a Certificate, exclusive of the cryptographic issuance (signing) of the Certificate itself.
 
 **Requirements**: The Network and Certificate System Security Requirements found in this document.
 
@@ -298,9 +310,13 @@ The CA MUST ensure access to Certificate Systems and Root CA Systems is:
 1. limited to personnel assigned to applicable Trusted Roles; and
 2. based on the Principle of Least Privilege.
 
+The CA MUST ensure access to Registration Authority Systems is based on the Principle of Least Privilege.
+
 ###### 2.2.1.1
 
 The CA MUST ensure personnel assigned to Trusted Roles that are authorized to access or authenticate to Certificate Systems or Root CA Systems use unique authentication credentials created by or assigned to the authorized individual.
+
+The CA MUST ensure personnel that are authorized to access or authenticate to Registration Authority Systems use unique authentication credentials created by or assigned to the authorized individual.
 
 ###### 2.2.1.2
 
